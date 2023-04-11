@@ -1,0 +1,57 @@
+[package]
+name = "fina-cash"
+version = "0.1.0"
+authors = [
+  "Guy Garcia",
+  "Jackson Swenson",
+  "Kyle Wahlberg",
+  "Nakey Jakey"
+]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = 3
+overflow-checks = true
+
+[features]
+default = ["utils"]
+
+# Utils
+utils = []
+errors = []
+flexible_msg = []
+math = []
+storage = ["cosmwasm-storage/iterator"]
+storage_plus = ["storage", "dep:secret-storage-plus"]
+
+# Protocol contracts
+governance = ["utils", "storage", "flexible_msg"]
+snip20 = ["utils", "errors", "dep:base64", "dep:query-authentication"]
+
+# Protocol Implementation Contracts
+# Used in internal smart contracts
+governance-impl = ["governance", "storage", "snip20", "storage_plus"]
+
+[dependencies]
+cosmwasm-std = { version = "0.10", package = "secret-cosmwasm-std" }
+cosmwasm-storage = { version = "0.10", package = "secret-cosmwasm-storage" }
+cosmwasm-math-compat = { path = "../cosmwasm_math_compat" }
+cosmwasm-schema = "0.10.1"
+secret-toolkit = { version = "0.2", features = ["crypto"] }
+schemars = "0.7"
+serde = { version = "1.0.103", default-features = false, features = ["derive"] }
+snafu = { version = "0.6.3" }
+# TODO: fix import
+chrono = "0.4.19"
+base64 = { version = "0.12.3", optional = true }
+# Needed for transactions
+query-authentication = {git = "https://github.com/securesecrets/query-authentication", tag = "v1.3.0", optional = true }
+remain = { version = "0.2.2", optional = true }
+subtle = { version = "2.2.3", default-features = false }
+sha2 = { version = "0.9.1", default-features = false }
+rand_chacha = { version = "0.2.2", default-features = false }
+rand_core = { version = "0.5.1", default-features = false }
+secret-storage-plus = { git = "https://github.com/securesecrets/secret-storage-plus", tag = "v1.0.0", optional = true }
